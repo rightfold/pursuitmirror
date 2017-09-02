@@ -1,0 +1,17 @@
+#!/bin/bash
+
+IndexURL='https://pursuit.purescript.org/'
+
+function VersionListURL {
+    echo "https://pursuit.purescript.org/packages/$1/available-versions"
+}
+
+for Package in $(                                                             \
+      curl "$IndexURL"                                                        \
+    | perl -ne 'print "$&\n" if /purescript-[A-Za-z0-9-]+/'                   \
+    | sort                                                                    \
+    | uniq -u
+); do
+    sleep 0.5
+    curl "$(VersionListURL "$Package")"
+done
